@@ -1,3 +1,4 @@
+using ApiGatewayNbg.Services;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -28,4 +29,5 @@ app.UseAuthorization();
 app.MapControllers();
 //3
 app.UseOcelot().Wait();
+app.UseMiddleware<TransformMiddleware>();
 app.Run();

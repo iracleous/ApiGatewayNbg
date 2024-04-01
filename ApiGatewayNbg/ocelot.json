@@ -7,12 +7,22 @@
         {
           "Host": "localhost",
           "Port": 7256
+        },
+        {
+          "Host": "localhost",
+          "Port": 7199
         }
+
       ],
       "DownstreamScheme": "https",
+      "DownstreamHeaderTransform": { "AnotherDownHeader": "OtherUp" },
       "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
-      "UpstreamPathTemplate": "/apinbg/product/{everything}"
+      "UpstreamPathTemplate": "/apinbg/product/{everything}",
+      "UpstreamHeaderTransform": { "AnotherUpHeader": "OtherUp" },
+      "LoadBalancerOptions": { "Type": "RoundRobin" }
     },
+
+
     {
       "DownstreamPathTemplate": "/api/customer/{everything}",
       "DownstreamScheme": "https",
