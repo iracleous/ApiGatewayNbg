@@ -2,6 +2,10 @@
 {
   "Routes": [
     {
+      "UpstreamPathTemplate": "/apinbg/product/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
+      "UpstreamHeaderTransform": { "AnotherUpHeader": "OtherUp" },
+
       "DownstreamPathTemplate": "/api/product/{everything}",
       "DownstreamHostAndPorts": [
         {
@@ -16,24 +20,22 @@
       ],
       "DownstreamScheme": "https",
       "DownstreamHeaderTransform": { "AnotherDownHeader": "OtherUp" },
-      "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
-      "UpstreamPathTemplate": "/apinbg/product/{everything}",
-      "UpstreamHeaderTransform": { "AnotherUpHeader": "OtherUp" },
       "LoadBalancerOptions": { "Type": "RoundRobin" }
     },
 
-
     {
+      "UpstreamPathTemplate": "/apinbg/customer/{everything}",
+      "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ],
       "DownstreamPathTemplate": "/api/customer/{everything}",
+
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
           "Port": 7025
         }
-      ],
-      "UpstreamPathTemplate": "/apinbg/customer/{everything}",
-      "UpstreamHttpMethod": [ "POST", "PUT", "GET", "DELETE" ]
+      ]
+      
     }
   ]
 }

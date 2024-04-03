@@ -1,7 +1,6 @@
-using ApiCustomer.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiCustomer.Controllers
+namespace Customer2.Controllers
 {
     [ApiController]
     [Route("[controller]")]
