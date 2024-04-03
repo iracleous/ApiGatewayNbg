@@ -7,7 +7,7 @@ namespace ApiCustomer.Security;
 
 public class SecurityService : ISecurityService
 {
-    public string GenerateJwtToken(string username, string password)
+    public string GenerateJwtToken(string username, string role)
     {
       
 
@@ -25,7 +25,11 @@ public class SecurityService : ISecurityService
         var token = new JwtSecurityToken(
             issuer: "codehub.gr",
             audience: "all-our-trainees",
-            claims: [new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Country, "Greece") ],
+            claims: [
+                new Claim(ClaimTypes.Name, username), 
+                new Claim(ClaimTypes.Country, "Greece"), 
+                new Claim(ClaimTypes.Role, role) 
+                ],
             expires: DateTime.UtcNow.AddMinutes(15),
             signingCredentials: credentials
         );

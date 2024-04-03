@@ -15,32 +15,33 @@ namespace ApiCustomer.Controllers
     {
 
         private readonly ISecurityService _securityService;
+        private readonly ApplicationDbContext _applicationDbContext;
 
-        public CustomerController(ISecurityService securityService)
+        public CustomerController(ISecurityService securityService, ApplicationDbContext applicationDbContext)
         {
             _securityService = securityService;
+            _applicationDbContext = applicationDbContext;
         }
 
-
+        [AllowAnonymous]
         [HttpPost("Signup")]
-        public void Signup(string username, string password)
+        public void Signup([FromBody] Credentials credentials)
         {
-
+            _applicationDbContext.Credentials.Add(credentials);
+            _applicationDbContext.SaveChanges();
         }
 
         [HttpPost("Login")]
         public string? Login( [FromBody]  Credentials credentials )
         {
             //todo compare values in db
-            var usernameDatabase = "username";
-            var passwordDatabase = "password";
 
-            if (usernameDatabase.Equals(credentials.Username) && passwordDatabase.Equals(credentials.Password))
-            {
-                return _securityService.GenerateJwtToken(credentials.Username, credentials.Password);
-            }
-            return null;
-        }
+            var dbCredentials = _applicationDbContext.Credentials.Where (
+                cr => cr.Username.Equals(credentials.Username) && cr.Password.Equals(credentials.Password))
+                .FirstOrDefault();
+            if (dbCredentials == null) return null;
+            return _securityService.GenerateJwtToken(credentials.Username, "Administrator");
+         }
 
 
         [Authorize]
@@ -59,7 +60,7 @@ namespace ApiCustomer.Controllers
             return "value";
         }
 
-        [Authorize]
+        [Authorize(Roles = "HRManager,Finance")]
         // POST api/<CustomerController>
         [HttpPost]
         public Customer Post([FromBody] Customer value)

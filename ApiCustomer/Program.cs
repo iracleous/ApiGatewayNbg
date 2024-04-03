@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<ISecurityService, SecurityService>();
+
 var optionsCon = builder.Configuration.GetConnectionString("MyConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(optionsCon));
