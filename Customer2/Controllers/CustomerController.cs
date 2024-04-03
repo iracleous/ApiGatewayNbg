@@ -24,9 +24,9 @@ namespace Customer2.Controllers
 
         // POST api/<CustomerController>
         [HttpPost]
-        public string Post([FromBody] string value)
+        public Customer Post([FromBody] string value)
         {
-            return value+"value";
+            return new Customer { Name = value + "value" };
         }
 
         // PUT api/<CustomerController>/5

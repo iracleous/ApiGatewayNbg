@@ -1,18 +1,19 @@
 ﻿namespace Customer2.Middleware;
 
-
+using Customer2.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
  
-    public class RequestBodyModificationMiddleware
+    public class BodyModificationMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public RequestBodyModificationMiddleware(RequestDelegate next)
+        public BodyModificationMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -38,8 +39,7 @@ using System.Threading.Tasks;
         }
 
 
-
-
+        // Read the response body
         var originalResponseBodyStream = context.Response.Body;
 
         using (var responseBody = new MemoryStream())
@@ -53,8 +53,17 @@ using System.Threading.Tasks;
             // Read the modified response body
             var modifiedResponseBody = new StreamReader(responseBody).ReadToEnd();
 
-            // Modify the response body here as needed
-            var modifiedContent = "Modified content: " + modifiedResponseBody;
+            string? modifiedContent;
+            try
+            {
+                Customer myCustomer = JsonSerializer.Deserialize<Customer>(modifiedResponseBody.ToString())!;
+                myCustomer.Name = myCustomer.Name + "control";
+                modifiedContent = JsonSerializer.Serialize(myCustomer);
+            }
+          catch(Exception )
+            {
+                modifiedContent = modifiedResponseBody;
+            }
 
             // Write the modified content to the original response body
             var buffer = Encoding.UTF8.GetBytes(modifiedContent);
@@ -67,7 +76,7 @@ using System.Threading.Tasks;
         {
             // Example modification: convert the request body to uppercase
             var requestBodyString = new StreamReader(originalBody).ReadToEnd();
-            var modifiedBodyString = "\"tttttt\""; //requestBodyString.ToUpper() ;
+            var modifiedBodyString = requestBodyString.ToUpper() ; //"\"tttttt\""; //
             var modifiedBodyBytes = Encoding.UTF8.GetBytes(modifiedBodyString);
             return new MemoryStream(modifiedBodyBytes);
         }
@@ -77,7 +86,7 @@ using System.Threading.Tasks;
     {
         public static IApplicationBuilder UseRequestBodyModificationMiddleware(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<RequestBodyModificationMiddleware>();
+            return builder.UseMiddleware<BodyModificationMiddleware>();
         }
     }
  

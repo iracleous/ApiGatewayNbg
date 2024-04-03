@@ -19,5 +19,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 app.UseRequestBodyModificationMiddleware();
-
 app.Run();
